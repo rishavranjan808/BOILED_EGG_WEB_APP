@@ -28,9 +28,6 @@ The BOILED-Egg model and the GIA/BBB ellipse coordinates come from Daina & Zoete
 2. **WLogP** (Wildman-Crippen LogP) is calculated with RDKit (`Descriptors.MolLogP`).
 3. Each molecule becomes a point (TPSA, WLogP). Using Shapely, the app checks whether the point falls inside the GIA polygon (the "white") or the BBB polygon (the "yolk").
 
-## Screenshots
-
-*(Add screenshots of the upload page and the results page here, for example `docs/upload.png` and `docs/results.png`.)*
 
 ## Installation
 
