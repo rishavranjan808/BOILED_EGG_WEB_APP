@@ -64,6 +64,14 @@ Open http://localhost:3000, upload one or more `.sdf` files, and view the result
 
 Files that are not `.sdf`, and molecules RDKit cannot parse, are listed on the results page.
 
+
+## Screenshots
+
+![alt text](BOILED_Egg.jpeg)
+
+
+
+
 ## Limitations
 
 - The model uses only TPSA and WLogP, so it is an approximation and does not replace experimental data or more detailed ADME models.

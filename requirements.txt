@@ -1,5 +1,5 @@
 debugpy
-rdkit-pypi
+rdkit
 Flask
 pandas
 matplotlib
