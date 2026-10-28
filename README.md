@@ -41,11 +41,9 @@ pip install -r requirements.txt
 
 RDKit installs from pip as `rdkit`. If that fails on your system, install it with conda instead (`conda install -c conda-forge rdkit`).
 
-## Usage
 
-```bash
-python frontend.py
-```
+## Usage
+streamlit run frontend.py
 
 Open http://localhost:3000, upload one or more `.sdf` files, and view the results.
 
