@@ -1,45 +1,83 @@
-# Drug_Repurposing_Project
-This project provides a comprehensive tool for predicting gastrointestinal absorption (GIA) and blood-brain barrier (BBB) penetration based on molecular properties derived from the BOILED-Egg model. The project is implemented in Python and uses RDKit for cheminformatics and Shapely for geometric analysis.
+# BOILED-Egg Web
 
+A Flask web app that predicts **gastrointestinal (GI) absorption** and **blood-brain barrier (BBB) penetration** of small molecules using the BOILED-Egg model. Upload one or more `.sdf` files, and the app calculates TPSA and WLogP for every molecule, classifies it against the GIA and BBB regions, and shows the results as a plot and a table.
 
-## Project Overview
-The BOILED-Egg model, developed by Daina and Zoete in 2016, is a widely recognized method for predicting the absorption and distribution of drugs within the human body based on molecular properties. This tool allows users to upload molecular structure data files in .sdf format, process the molecular data, and output predictions of GIA and BBB penetration.
+> **Scope note:** this tool predicts absorption and brain penetration from two descriptors. It is a quick screening aid for early-stage work (for example, shortlisting candidates in a drug repurposing workflow), not a drug repurposing engine by itself.
 
-## Key Features
-### Molecular Descriptor Calculation:
+## Attribution
 
-Topological Polar Surface Area (TPSA): Calculated using RDKit's Descriptors.TPSA, considering the contributions from sulfur and phosphorus atoms.
-Wildman and Crippen LogP (WLogP): Representing molecular lipophilicity, also calculated using RDKit.
-### Geometrical Analysis:
+This project is a modified version of **pyBOILEDegg** by Bruce F. Milne (Copyright 2021, GPL v3): https://doi.org/10.5281/zenodo.4725530
 
-The tool defines specific regions in the TPSA vs WLogP space as ellipses, representing areas where molecules are likely to exhibit good GIA or BBB penetration.
-These regions are defined using the Polygon class from shapely. geometry.
-### Data Handling:
+The BOILED-Egg model and the GIA/BBB ellipse coordinates come from Daina & Zoete (2016).
 
-Users can upload multiple .sdf files, each containing a series of molecular structures.
-For each molecule, TPSA and WLogP are calculated, and it is determined whether the molecule falls within the predefined GIA or BBB regions.
-### Output:
+### What I changed
 
-A CSV file summarizing the molecular properties and their classification concerning GIA/BBB regions.
-A scatter plot visualizing the TPSA-WLogP space, with the GIA and BBB regions overlaid. The plot is saved as both PDF and PNG files.
+- Added a Flask web interface with multi-file `.sdf` upload
+- Results displayed in the browser: scatter plot with GIA/BBB regions plus a results table
+- PDF and CSV download for each run
+- Per-run output folders, filename sanitising, and reporting of molecules that fail to parse (instead of silently skipping them)
+
+### What is from the original
+
+- The descriptor calculation approach (TPSA with S and P included, WLogP via RDKit)
+- The GIA and BBB ellipse coordinates and the point-in-polygon classification logic
+
+## How it works
+
+1. **TPSA** is calculated with RDKit (`Descriptors.TPSA`, including sulfur and phosphorus contributions).
+2. **WLogP** (Wildman-Crippen LogP) is calculated with RDKit (`Descriptors.MolLogP`).
+3. Each molecule becomes a point (TPSA, WLogP). Using Shapely, the app checks whether the point falls inside the GIA polygon (the "white") or the BBB polygon (the "yolk").
+
+## Screenshots
+
+*(Add screenshots of the upload page and the results page here, for example `docs/upload.png` and `docs/results.png`.)*
+
+## Installation
+
+```bash
+git clone https://github.com/rishavranjan808/Drug_Repurposing_Project-ProDrug-.git
+cd Drug_Repurposing_Project-ProDrug-
+python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+RDKit installs from pip as `rdkit`. If that fails on your system, install it with conda instead (`conda install -c conda-forge rdkit`).
 
 ## Usage
-### Upload .SDF Files:
-The tool allows you to upload one or more .sdf files containing molecular structures.
 
-### Run the Script:
-To execute the model, simply run the provided script:
+```bash
+python frontend.py
+```
 
-### python frontend.py
+Open http://localhost:3000, upload one or more `.sdf` files, and view the results.
 
-This will process the uploaded .sdf files and generate the output files.
+### Input
 
-### Output Files:
+`.sdf` files containing one or more molecules. Molecule names are read from the SDF title line. If a molecule has no name, it is labelled `filename#position`.
 
-CSV File: A file with the suffix _BOILED_Egg.csv will be created for each input file. This file contains the calculated TPSA and WLogP values, along with the GIA and BBB predictions.
-Scatter Plot: A plot showing the molecular data points within the TPSA-WLogP space, overlaid with the GIA and BBB ellipses, will be saved as both PDF and PNG files.
+### Output
+
+| Output | Where |
+|---|---|
+| Scatter plot with GIA/BBB regions | Shown in the browser |
+| Results table (Name, Source file, TPSA, WLogP, GIA, BBB) | Shown in the browser |
+| PDF of the plot | Download button on the results page |
+| CSV of the results | Download button on the results page |
+
+Files that are not `.sdf`, and molecules RDKit cannot parse, are listed on the results page.
+
+## Limitations
+
+- The model uses only TPSA and WLogP, so it is an approximation and does not replace experimental data or more detailed ADME models.
+- Predictions are only as good as the input structures.
+- Intended for local use. If you deploy it publicly, add authentication and cleanup of old results.
+
+## License
+
+This project is licensed under the **GNU General Public License v3.0**, the same license as the original pyBOILEDegg. See [LICENSE](LICENSE).
 
 ## References
-### Daina, A., & Zoete, V. (2016). A BOILED-Egg to predict gastrointestinal absorption and brain penetration of small molecules. Chemical Research in Toxicology, 29(5), 953-963.
-### Milne, B. (2021, April 28). bfmilne/pyBOILEDegg. First release of pyBOILEDegg (Version v1.0.0). Zenodo. http://doi.org/10.5281/zenodo.4725530
 
+1. Daina, A. & Zoete, V. A BOILED-Egg To Predict Gastrointestinal Absorption and Brain Penetration of Small Molecules. *ChemMedChem* **11**, 1117-1121 (2016).
+2. Milne, B. F. bfmilne/pyBOILEDegg, version 1.0.0. Zenodo (2021). https://doi.org/10.5281/zenodo.4725530
