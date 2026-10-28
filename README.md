@@ -59,7 +59,7 @@ Open http://localhost:3000, upload one or more `.sdf` files, and view the result
 |---|---|
 | Scatter plot with GIA/BBB regions | Shown in the browser |
 | Results table (Name, Source file, TPSA, WLogP, GIA, BBB) | Shown in the browser |
-| PDF of the plot | Download button on the results page |
+| Image of the plot | Download button on the results page |
 | CSV of the results | Download button on the results page |
 
 Files that are not `.sdf`, and molecules RDKit cannot parse, are listed on the results page.
